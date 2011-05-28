@@ -1,5 +1,17 @@
+(* file: wget.ml
+ * author: kyle isom <coder@kyleisom.net>
+ *
+ * very crude implementation of the wget utility
+ * historical note: my first real program in ocaml
+ *)
 open Http_client.Convenience
 open Unix
+
+(* TODO:
+   * support chunked downloading
+   * some kind of progress meter would be nice
+   * exception handling?
+ *)
 
 let download = fun ~url ~filename ->
   let page = http_get url in
