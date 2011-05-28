@@ -13,8 +13,13 @@ open Unix
    * exception handling?
  *)
 
+let bad_url ~msg ~url = 
+  print_endline (msg ^ ": " ^ url) ;
+  exit 1
+;;
+
 let download = fun ~url ~filename ->
-  let page = http_get url in
+  let page = try http_get url with Failure str  -> bad_url ~msg:str ~url:url in
   let downsz = String.length page in 
   let fd = openfile filename [ O_RDWR; O_TRUNC; O_CREAT ] 0o644 in
   let written = write fd page 0 downsz in
