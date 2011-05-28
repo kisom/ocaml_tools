@@ -11,7 +11,6 @@ open Unix
 (* TODO:
    * support chunked downloading
    * some kind of progress meter would be nice
-   * exception handling?
  *)
 
 let bad_url ~msg ~url = 

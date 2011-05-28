@@ -30,6 +30,8 @@ BINARIES := wget
 vpath %.ml src
 vpath %.mli src
 
+all: $(BINARIES)
+
 wget: $(LIBDIR)/wget.cmx
 	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $<
 
@@ -42,4 +44,4 @@ $(LIBDIR)/%.cmx: $(SRCDIR)/%.ml
 clean: 
 	rm -rf $(LIBDIR)/*.* $(BINDIR)/*
 
-.PHONY: clean 
+.PHONY: clean all
