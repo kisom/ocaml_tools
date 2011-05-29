@@ -26,22 +26,29 @@ BINDIR := bin
 INCDIRS := -I /usr/lib/ocaml/netclient
 PACKAGES := -linkpkg -package unix,netclient
 BINARIES := wget
+COMMON := $(LIBDIR)/common.cmxa
 
 vpath %.ml src
 vpath %.mli src
 
 all: $(BINARIES)
 
-wget: $(LIBDIR)/wget.cmi $(LIBDIR)/wget.cmx 
-	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(LIBDIR)/wget.cmx
+libs: $(COMMON)
+
+$(LIBDIR)/common.cmxa: $(SRCDIR)/common.mli $(SRCDIR)/common.ml
+	$(FIND) $(BYTE) -o $(LIBDIR)/common.cmi $(SRCDIR)/common.mli
+	$(FIND) $(NATIVE) -o $(LIBDIR)/common.cmxa -a -I $(LIBDIR) $(SRCDIR)/common.ml
+
+wget: $(COMMON) $(LIBDIR)/wget.cmi $(LIBDIR)/wget.cmx
+	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/wget.cmx
 
 $(LIBDIR)/%.cmi: $(SRCDIR)/%.mli
 	$(FIND) $(BYTE) -o $@ -c $<
 
-$(LIBDIR)/%.cmx: $(SRCDIR)/%.ml
-	$(FIND) $(NATIVE) -o $@ -I $(LIBDIR) $(INCDIRS) -c $<
+$(LIBDIR)/%.cmx: $(SRCDIR)/%.ml 
+	$(FIND) $(NATIVE) -o $@ -I $(LIBDIR) $(INCDIRS) -c $(SRCDIR)/$*.ml
 
 clean: 
 	rm -rf $(LIBDIR)/*.* $(BINDIR)/*
 
-.PHONY: clean all
+.PHONY: clean all libs
