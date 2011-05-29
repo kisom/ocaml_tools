@@ -32,14 +32,14 @@ vpath %.mli src
 
 all: $(BINARIES)
 
-wget: $(LIBDIR)/wget.cmx
-	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $<
+wget: $(LIBDIR)/wget.cmi $(LIBDIR)/wget.cmx 
+	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(LIBDIR)/wget.cmx
 
-%.cmi: $(SRCDIR)/%.mli
-	$(BYTE) -o $(LIBDIR)/$@ -c $<
+$(LIBDIR)/%.cmi: $(SRCDIR)/%.mli
+	$(FIND) $(BYTE) -o $@ -c $<
 
 $(LIBDIR)/%.cmx: $(SRCDIR)/%.ml
-	$(FIND) $(NATIVE) -o $@ $(INCDIRS) -c $<
+	$(FIND) $(NATIVE) -o $@ -I $(LIBDIR) $(INCDIRS) -c $<
 
 clean: 
 	rm -rf $(LIBDIR)/*.* $(BINDIR)/*
