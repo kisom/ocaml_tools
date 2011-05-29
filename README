@@ -1,5 +1,24 @@
-ocaml-tools
+ocaml_tools
 author: kyle isom
 license: ISC / public-domain dual-licensed
 
+in trying to learn objective caml, i decided to try to write some system
+utilities to learn how to be useful in the language. i have a feeling i'm
+going to look back on this repo with embarassment later on, but c'est la vie.
+
+utilities:
+	wget: basic implementation of the GNU wget utility
+
+libraries:
+	common: module of common functions
+
+make targets:
+      all: builds all of the above binaries
+      libs: builds the library collection
+      clean: removes all libs and binaries
+
+dependencies:
+the tools require the following packages:
+    * findlibs (http://www.camlcity.org/archive/programming/findlib.html)
+    * ocamlnet (http://projects.camlcity.org/projects/ocamlnet.html)
 
