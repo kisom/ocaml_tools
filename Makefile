@@ -36,16 +36,21 @@ all: $(BINARIES)
 libs: $(COMMON)
 
 $(LIBDIR)/common.cmxa: $(SRCDIR)/common.mli $(SRCDIR)/common.ml
-	$(FIND) $(BYTE) -o $(LIBDIR)/common.cmi $(SRCDIR)/common.mli
+	@echo "building $(COMMON)..."
+	@echo "compiling interface $(LIBDIR)/common.cmi"
+	$(FIND) $(BYTE) -o $(LIBDIR)/common.cmi -c $(SRCDIR)/common.mli
 	$(FIND) $(NATIVE) -o $(LIBDIR)/common.cmxa -a -I $(LIBDIR) $(SRCDIR)/common.ml
 
 wget: $(COMMON) $(LIBDIR)/wget.cmi $(LIBDIR)/wget.cmx
+	@echo "building wget binary..."
 	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/wget.cmx
 
 $(LIBDIR)/%.cmi: $(SRCDIR)/%.mli
+	@echo "compiling interface $*.mli"
 	$(FIND) $(BYTE) -o $@ -c $<
 
 $(LIBDIR)/%.cmx: $(SRCDIR)/%.ml 
+	@echo "compiling $*.ml..."
 	$(FIND) $(NATIVE) -o $@ -I $(LIBDIR) $(INCDIRS) -c $(SRCDIR)/$*.ml
 
 clean: 
