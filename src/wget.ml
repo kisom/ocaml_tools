@@ -22,6 +22,7 @@ let usage = fun () ->
   Printf.printf "usage:\n\t%s url local_filename\n" argv.(0)
 ;;
 
+(* main download function *)
 let download = fun ~url ~filename ->
   let page = try http_get url with Failure str  -> bad_url ~msg:str ~url:url in
   let downsz = String.length page in 
@@ -32,8 +33,7 @@ let download = fun ~url ~filename ->
 ;;
 
 let main = fun () ->
-  let len = Array.length argv in
-  if len = 3 then 
+  if Common.have_args 3 then
     begin
       print_endline ("will download " ^ argv.(1) ^ " to " ^ argv.(2)) ;
       download ~url:Sys.argv.(1) ~filename:Sys.argv.(2) ; () 

@@ -1,1 +1,1 @@
-val download : url:string -> filename:string -> unit
+val main : unit -> unit
