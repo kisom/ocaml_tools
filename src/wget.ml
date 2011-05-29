@@ -23,6 +23,7 @@ let usage = fun () ->
 ;;
 
 (* main download function *)
+ (* TODO: make this a recursive socket read and add progress status *)
 let download = fun ~url ~filename ->
   let page = try http_get url with Failure str  -> bad_url ~msg:str ~url:url in
   let downsz = String.length page in 
