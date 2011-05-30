@@ -8,6 +8,8 @@ going to look back on this repo with embarassment later on, but c'est la vie.
 
 utilities:
 	wget: basic implementation of the GNU wget utility
+	cat:  basic implementation of the UNIX cat utility
+	wc:   basic implementation of the UNIX wc utility
 
 libraries:
 	common: module of common functions
