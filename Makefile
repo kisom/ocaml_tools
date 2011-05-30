@@ -24,9 +24,10 @@ BINDIR := bin
 #######################
 # all the directories with the special libraries
 TOPDIR := /usr/lib/ocaml
+TOPDIR := /opt/local/lib/ocaml/site-lib
 INCDIRS := -I $(TOPDIR)/netclient
 PACKAGES := -linkpkg -package unix,netclient
-BINARIES := wget xxtea
+BINARIES := wget cat
 COMMON := $(LIBDIR)/common.cmxa
 
 vpath %.ml src
@@ -56,6 +57,10 @@ xxtea: $(COMMON) $(LIBDIR)/xxtea.cmi $(LIBDIR)/xxtea.cmx
 cat: $(COMMON) $(LIBDIR)/cat.cmi $(LIBDIR)/cat.cmx
 	@echo "building cat binary..."
 	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/cat.cmx
+
+wc: $(LIBDIR)/wc.cmi $(LIBDIR)/wc.cmx
+	@echo "building wc binary..."
+	$(FIND) $(NATIVE) -linkpkg -package unix -o $(BINDIR)/$@ $(INCLUDES) $(LIBDIR)/wc.cmx
 
 $(LIBDIR)/%.cmi: $(SRCDIR)/%.mli
 	@echo "compiling interface $*.mli"
