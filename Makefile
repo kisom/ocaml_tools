@@ -50,10 +50,6 @@ wget: $(COMMON) $(LIBDIR)/wget.cmi $(LIBDIR)/wget.cmx
 	@echo "building wget binary..."
 	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/wget.cmx
 
-xxtea: $(COMMON) $(LIBDIR)/xxtea.cmi $(LIBDIR)/xxtea.cmx
-	@echo "building xxtea binary..."
-	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/xxtea.cmx
-
 cat: $(COMMON) $(LIBDIR)/cat.cmi $(LIBDIR)/cat.cmx
 	@echo "building cat binary..."
 	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/cat.cmx
