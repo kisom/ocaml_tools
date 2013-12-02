@@ -21,6 +21,5 @@ make targets:
 
 dependencies:
 the tools require the following packages:
-    * findlibs (http://www.camlcity.org/archive/programming/findlib.html)
     * ocamlnet (http://projects.camlcity.org/projects/ocamlnet.html)
 

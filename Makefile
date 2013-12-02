@@ -1,72 +1,26 @@
-#################
-### COMPILERS ###
-#################
-BYTE := ocamlc
-NATIVE := ocamlopt
-FIND := ocamlfind
+TARGETS = cat wc
 
-####################
-### ORGANISATION ###
-####################
-# project is organised into a couple directories
-# contains *.ml and *.mli
-SRCDIR := src
+all: $(TARGETS)
 
-# contains *.cm? *.o
-LIBDIR := lib
+common: src/common.ml src/common.mli
+	ocamlopt -o src/common.cmi -c src/common.mli
+	ocamlopt -a -I src/ -o lib/common.cmxa src/common.ml
 
-# contains the completed binaries
-BINDIR := bin
+wget: common src/wget.ml src/wget.mli
+	ocamlopt -o src/wget.cmi -c src/wget.mli
+	ocamlopt -I src/ -o lib/wget.cmx -c src/wget.ml 
+	ocamlopt -o bin/wget unix.cmxa netclient.cmxa lib/wget.cmx lib/common.cmxa
 
+cat: common src/cat.ml src/cat.mli
+	ocamlopt -o src/cat.cmi -c src/cat.mli
+	ocamlopt -I src/ -o lib/cat.cmxa -c src/cat.ml 
+	ocamlopt -o bin/cat unix.cmxa lib/cat.cmx lib/common.cmxa
 
-#######################
-### PACKAGES / LIBS ###
-#######################
-# all the directories with the special libraries
-TOPDIR := /usr/lib/ocaml
-TOPDIR := /opt/local/lib/ocaml/site-lib
-INCDIRS := -I $(TOPDIR)/netclient
-PACKAGES := -linkpkg -package unix,netclient
-BINARIES := wget cat
-COMMON := $(LIBDIR)/common.cmxa
+wc: common src/wc.ml src/wc.mli
+	ocamlopt -o src/wc.cmi -c src/wc.mli
+	ocamlopt -I src/ -o lib/wc.cmxa -c src/wc.ml 
+	ocamlopt -o bin/wc unix.cmxa lib/wc.cmx lib/common.cmxa
 
-vpath %.ml src
-vpath %.mli src
-
-all: $(BINARIES)
-
-libs: $(COMMON)
-
-$(LIBDIR)/common.cmxa: $(SRCDIR)/common.mli $(SRCDIR)/common.ml
-	@echo "building $(COMMON)..."
-	@echo "compiling interface $(LIBDIR)/common.cmi"
-	$(FIND) $(BYTE) -o $(LIBDIR)/common.cmi -c $(SRCDIR)/common.mli
-	@echo "compiling common library..."
-	$(FIND) $(NATIVE) -o $(LIBDIR)/common.cmx -I $(LIBDIR) -c $(SRCDIR)/common.ml
-	@echo "building .cmxa..."
-	$(FIND) $(NATIVE) -o $(LIBDIR)/common.cmxa -I $(LIBDIR) -a $(LIBDIR)/common.cmx
-
-wget: $(COMMON) $(LIBDIR)/wget.cmi $(LIBDIR)/wget.cmx
-	@echo "building wget binary..."
-	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/wget.cmx
-
-cat: $(COMMON) $(LIBDIR)/cat.cmi $(LIBDIR)/cat.cmx
-	@echo "building cat binary..."
-	$(FIND) $(NATIVE) $(PACKAGES) -o $(BINDIR)/$@ $(INCLUDES) $(COMMON) $(LIBDIR)/cat.cmx
-
-wc: $(LIBDIR)/wc.cmi $(LIBDIR)/wc.cmx
-	@echo "building wc binary..."
-	$(FIND) $(NATIVE) -linkpkg -package unix -o $(BINDIR)/$@ $(INCLUDES) $(LIBDIR)/wc.cmx
-
-$(LIBDIR)/%.cmi: $(SRCDIR)/%.mli
-	@echo "compiling interface $*.mli"
-	$(FIND) $(BYTE) -o $@ -c $<
-
-$(LIBDIR)/%.cmx: $(SRCDIR)/%.ml 
-	@echo "compiling $*.ml..."
-	$(FIND) $(NATIVE) -o $@ -I $(LIBDIR) $(INCDIRS) -c $(SRCDIR)/$*.ml
-
-clean: 
-	rm -rf $(LIBDIR)/*.* $(BINDIR)/*
-
-.PHONY: clean all libs
+clean:
+	rm -f lib/*.cm* lib/*.a lib/*.o
+	rm -f bin/wc bin/cat bin/wget
